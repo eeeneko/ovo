@@ -35,6 +35,23 @@ namespace ovo{
             inline void hi(){cout << "Hello OvO~" << endl;};
             void detail();
     };
+
+    /**
+    * Operate with files
+    *
+    * @author yimian
+    * @category ovo
+    * @package ovo
+    */
+    class file{
+
+        public:
+            void get_files_name(const string path, vector<string>& files, const string format = "*", const int isSearchSubfolders = 0, const int isShowPath = 0);
+
+        private:
+            void get_all_files_name(string path, vector<string>& files, const string format = "*", const int isShowPath = 0);
+            void get_all_folders_name(string path, vector<string>& folders);
+    };
 }
 
 
