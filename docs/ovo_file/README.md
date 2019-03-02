@@ -29,10 +29,10 @@ std::cout << fls[i] << endl;
 ````
 
 This will show all the .md files with a path in current and all subfolders.
->.\README.md
->.\docs\ovo_file\README.md
->.\docs\ovo_info\README.md
->.\docs\ovo_string\README.
+>.\README.md<br>
+>.\docs\ovo_file\README.md<br/>
+>.\docs\ovo_info\README.md<br/>
+>.\docs\ovo_string\README.<br/>
 
 
 

@@ -24,10 +24,10 @@ ovo::info obj;
 obj.detail();
 ````
 Expected screen: 
->Lib Name: ovo
->Org: EEENeko (https://github.com/eeeNeko)
->Author: Jianzhi Fan, Yimian Liu
->license GNU General Public License 2.0
->copyright Copyright (c) 2019 EEENeko
+>Lib Name: ovo<br/>
+>Org: EEENeko (https://github.com/eeeNeko)<br/>
+>Author: Jianzhi Fan, Yimian Liu<br/>
+>license GNU General Public License 2.0<br/>
+>copyright Copyright (c) 2019 EEENeko<br/>
 
 
