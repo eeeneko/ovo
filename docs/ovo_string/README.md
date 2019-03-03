@@ -1,2 +1,2 @@
-## Class string
+## Class ovo::string
 ### string.xxx

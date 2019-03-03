@@ -22,11 +22,7 @@ int main()
 ```` 
 This will show all the files in current position. Such as:
 >README.md<br/>
-<<<<<<< HEAD
->LICENSE
-=======
 >LICENSE<br/>
->>>>>>> yimian
 
 You can also do like this:
 ````C++
@@ -52,12 +48,11 @@ int main()
 ````
 
 This will show all the .md files with a path in current and all subfolders.
-<<<<<<< HEAD
 >.\README.md<br>
 >.\docs\ovo_file\README.md<br/>
 >.\docs\ovo_info\README.md<br/>
 >.\docs\ovo_string\README.<br/>
-=======
+><br/>
 >FileName: .\README.md<br/>
 >Size: 28<br/>
 >Attribute: 32<br/>
@@ -85,7 +80,7 @@ This will show all the .md files with a path in current and all subfolders.
 >Create Time: Sat Mar 02 18:14:52 2019<br/>
 >Last Access Time: Sat Mar 02 18:14:52 2019<br/>
 >Last Write Time: Sat Mar 02 18:14:52 2019<br/>
->>>>>>> yimian
+
 
 
 
