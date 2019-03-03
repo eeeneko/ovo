@@ -136,7 +136,13 @@ namespace ovo{
             void get_all_folders_name(string path, vector<string>& folders);
     };
 
-
+    /**
+    * Math operation
+    *
+    * @author yimian, Jiewei Wei(md5)
+    * @category ovo
+    * @package ovo
+    */
     class math {
 
         public:
