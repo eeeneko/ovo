@@ -1,21 +1,19 @@
 #include <iostream>
-#include <vector>
-
+#include <time.h>
 #include "ovo.h"
 
-int main(int argc, char const *argv[])
+int main()
 {
-	ovo::info i;
-
-	i.hi();
-	std::cout << i.version << std::endl;
-    i.detail();
-
     ovo::file f;
-    vector<string> fls;
-    f.get_files_name(".\\",fls,"*.md",1,1);
-    for(int i = 0; i < fls.size(); i++)
-    std::cout << fls[i] << endl;
+    f.get_files_info(".\\","*.md",1,1);//In Windows
+    for(int i = 0; i < f.num(); i++){
 
-	return 0;
+        std::cout << "FileName: " << f.name[i] << endl;
+        std::cout << "Size: " << f.size[i] << endl;
+        std::cout << "Attribute: " << f.attrib[i] << endl;
+        std::cout << "Create Time: " << ctime(&f.time_create[i]);
+        std::cout << "Last Access Time: " << ctime(&f.time_access[i]);
+        std::cout << "Last Write Time: " << ctime(&f.time_write[i]) << endl;
+    }
+    return 0;
 }
