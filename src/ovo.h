@@ -46,10 +46,17 @@ namespace ovo{
     class file{
 
         public:
-            void get_files_name(const string path, vector<string>& files, const string format = "*", const int isSearchSubfolders = 0, const int isShowPath = 0);
+            vector<string> name;
+            vector<unsigned int> size;
+            vector<time_t> time_create;
+            vector<time_t> time_access;
+            vector<time_t> time_write;
+            vector<unsigned int> attrib;
+            inline int num(){return name.size();}
+            void get_files_info(const string path, const string format = "*", const int isSearchSubfolders = 0, const int isShowPath = 0);
 
         private:
-            void get_all_files_name(string path, vector<string>& files, const string format = "*", const int isShowPath = 0);
+            void get_all_files_info(string path, const string format = "*", const int isShowPath = 0);
             void get_all_folders_name(string path, vector<string>& folders);
     };
 }

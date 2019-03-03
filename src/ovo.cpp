@@ -56,17 +56,16 @@ void ovo::info::detail()
 /****** Class file ******/
 
 /**
- * Get All Files with certain format
+ * Get All Files info with certain format
  *
  * @Author yimian
  * @access private
  * @param string path filePath
- * @param vector<string>& files
  * @param string format  #such as "*.jpg"
  * @param int isShowPath  #If this is 1, the path would display before every filename
  * @return void
  */
-void ovo::file::get_all_files_name(string path, vector<string>& files, const string format, const int isShowPath)
+void ovo::file::get_all_files_info(string path, const string format, const int isShowPath)
 {
     long hFile = 0;
     //File info struct
@@ -85,9 +84,15 @@ void ovo::file::get_all_files_name(string path, vector<string>& files, const str
         {
             if(!(fileInfo.attrib & _A_SUBDIR)){
                 if(isShowPath)
-                    files.push_back(p.assign(path).append(sign).append(fileInfo.name));
+                    name.push_back(p.assign(path).append(sign).append(fileInfo.name));
                 else
-                    files.push_back(p.assign(fileInfo.name));
+                    name.push_back(p.assign(fileInfo.name));
+
+                size.push_back(fileInfo.size);
+                time_create.push_back(fileInfo.time_create);
+                time_access.push_back(fileInfo.time_access);
+                time_write.push_back(fileInfo.time_write);
+                attrib.push_back(fileInfo.attrib);
             }
 
         }while(_findnext(hFile, &fileInfo) == 0);
@@ -143,13 +148,12 @@ void ovo::file::get_all_folders_name(string path, vector<string>& folders)
  * @Author yimian
  * @access public
  * @param string path filePath
- * @param vector<string> files
  * @param string format  #such as "*.jpg"
  * @param int isSearchSubfolders  ##If this is 1, will search all the sub folders
  * @param int isShowPath  #If this is 1, the path would display before every filename
  * @return void
  */
-void ovo::file::get_files_name(const string path, vector<string>& files, const string format, const int isSearchSubfolders, const int isShowPath)
+void ovo::file::get_files_info(const string path, const string format, const int isSearchSubfolders, const int isShowPath)
 {
 
 #ifdef linux    
@@ -158,7 +162,7 @@ void ovo::file::get_files_name(const string path, vector<string>& files, const s
     const string sign = "\\";
 #endif
 
-    get_all_files_name(path, files, format, isShowPath);
+    get_all_files_info(path, format, isShowPath);
 
     //Search Sub Folders
     if(isSearchSubfolders){
@@ -167,7 +171,7 @@ void ovo::file::get_files_name(const string path, vector<string>& files, const s
 
         for(int i = 0; i < foldersPath.size(); i++){
 
-            get_all_files_name(foldersPath[i], files, format, isShowPath);
+            get_all_files_info(foldersPath[i], format, isShowPath);
         }
     }
 
