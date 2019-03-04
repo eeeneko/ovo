@@ -1,6 +1,9 @@
 ## Class ovo::info
 ### info.version
-This is a `static` `string` variable with the version info. A simple demo like this:
+This is a `static` `string` variable with the version info. 
+#### Return
+ - **string versionInfo** The version infomation of this package.
+#### Example
 ````C++
 #include <iostream>
 #include "ovo.h"
@@ -14,9 +17,10 @@ int main()
 ````
 The screen should show like this: 
 >Version 0.0.1
-
+--------------------------------
 ### info.hi()
-This function can print a welcome info with a `void` return value. Demo like this:
+This function can print a welcome info with a `void` return value. 
+#### Example
 ````C++
 #include <iostream>
 #include "ovo.h"
@@ -30,9 +34,10 @@ int main()
 ````
 Expected screen: 
 >Hellow OvO~
-
+----------------------------------
 ### info.detail()
-This function return with void, print detail info about this library. Use like this:
+This function return with void, print detail info about this library.
+#### Example
 ````C++
 #include <iostream>
 #include "ovo.h"
@@ -50,5 +55,5 @@ Expected screen:
 >Author: Jianzhi Fan, Yimian Liu<br/>
 >license GNU General Public License 2.0<br/>
 >copyright Copyright (c) 2019 EEENeko<br/>
-
+--------------------------------------
 
