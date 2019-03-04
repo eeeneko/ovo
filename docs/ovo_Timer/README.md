@@ -72,4 +72,43 @@ This will get the following result. (Use Ctrl+C to interrupt)
 > .<br/>
 > .<br/>
 -------------------
+### Timer.stop()
+This can be used to stop a Timer.
+
+#### Example
+````C++
+#include <iostream>
+
+#define _pthread
+
+#include "ovo.h"
+
+using namespace std;
+
+void display(){
+    cout << "Hey.. " << endl;
+}
+
+int main()
+{
+    ovo::Timer t = ovo::Timer();
+    t.setsetInterval(dis, 1000);
+
+    t.setTimeout([&]() {
+        cout << "Hey.. After 5.6s. I will stop the timer!" << endl;
+        t.stop();
+    }, 5600); 
+
+    while (1); //Keep the main thread never stop
+    return 0;
+}
+````
+This will get the following result. (Use Ctrl+C to interrupt)
+>Hey..<br/>
+>Hey.. <br/>
+>Hey.. <br/>
+>Hey.. <br/>
+>Hey.. <br/>
+>Hey.. After 5.6s. I will stop the timer
+-------------------
 
