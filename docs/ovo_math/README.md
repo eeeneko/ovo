@@ -1,4 +1,5 @@
 ## Class ovo::math
+
 ### math.md5()
 This function can generate a Hash md5 value from a string.
 #### Params:
@@ -44,6 +45,7 @@ int main()
 This will get the following result.
 >0cc175b9c0f1b6a8<br/>
 >♀羥估穸?脵鈏w&a
+
 ### math.base64_encode()
 This function can encode a string to base64 format.
 #### Params:
@@ -68,6 +70,7 @@ int main()
 ````
 This will get the following result.
 >YWFhYWE=
+
 ### math.base64_decode()
 This function can decode a string from base64 format.
 #### Params:
