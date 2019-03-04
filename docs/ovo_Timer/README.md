@@ -92,7 +92,7 @@ void display(){
 int main()
 {
     ovo::Timer t = ovo::Timer();
-    t.setsetInterval(dis, 1000);
+    t.setInterval(display, 1000);
 
     t.setTimeout([&]() {
         cout << "Hey.. After 5.6s. I will stop the timer!" << endl;
