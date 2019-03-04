@@ -83,6 +83,7 @@
   (a) += (b); \
 }
 
+
 /* Define of btye.*/
 typedef unsigned char byte;
 /* Define of byte. */
@@ -150,16 +151,22 @@ namespace ovo{
     class math {
 
         public:
-            inline string MD5 (const string message) const {
-                md5 m(message);
+            /*** md5 ***/
+            inline string md5 (const string message) const {
+                MD5 m(message);
                 return m.toStr();
             }
-            class md5 {
+
+            /*** base64 ***/
+            string base64_encode(const string fromStr);
+            string base64_decode(string const& s);
+
+            class MD5 {
 
                 public:
                     /*** md5 ***/
                     /* Construct a md5 object with a string. */
-                    md5(const string& message);
+                    MD5(const string& message);
                     /* Generate md5 digest. */
                     const byte* getDigest();
                     /* Convert digest to string value */
@@ -193,6 +200,11 @@ namespace ovo{
             };
 
         private:
+            /*** base64 ***/
+            static const string base64_chars;
+            static inline bool is_base64(unsigned char c) {
+                return (isalnum(c) || (c == '+') || (c == '/'));
+            }
 
     };
 }
