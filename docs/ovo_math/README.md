@@ -46,6 +46,30 @@ This will get the following result.
 >0cc175b9c0f1b6a8<br/>
 >♀羥估穸?脵鈏w&a
 --------------
+### math.sha256()
+This function can generate a Hash sha256 value from a string.
+#### Params:
+ - **string value** The content need to encode.
+#### Return:
+ - **string Hex md5 code** The generated sha256 code.
+#### Example
+````C++
+#include <iostream>
+#include <string>
+#include "ovo.h"
+  
+int main()
+{
+    std::string s = "a";
+    ovo::math m;
+
+    std::cout << m.sha256(s) << std::endl;
+    return 0;
+}
+````
+This will get the following result.
+>ed968e840d10d2d313a870bc131a4e2c311d7ad09bdf32b3418147221f51a6e2
+----------------------
 ### math.base64_encode()
 This function can encode a string to base64 format.
 #### Params:
