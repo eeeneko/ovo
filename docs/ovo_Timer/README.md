@@ -26,7 +26,7 @@ void display(){
 int main()
 {
     ovo::Timer t = ovo::Timer();
-    t.setsetTimeout(dis, 1000); 
+    t.setTimeout(display, 1000); 
 
     while (1); //Keep the main thread never stop
     return 0;
@@ -58,7 +58,7 @@ void display(){
 int main()
 {
     ovo::Timer t = ovo::Timer();
-    t.setsetInterval(dis, 1000); 
+    t.setInterval(display, 1000); 
 
     while (1); //Keep the main thread never stop
     return 0;
