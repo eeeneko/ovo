@@ -16,7 +16,7 @@ int main()
     std::string s = "a";
     ovo::math m;
 
-    std::cout << m.MD5(s) << std::endl;
+    std::cout << m.md5(s) << std::endl;
     return 0;
 }
 ````
@@ -34,7 +34,7 @@ This will get the following result.
 int main()
 {
     std::string s = "a";
-    ovo::math::md5 m(s);
+    ovo::math::MD5 m(s);
 
     std::cout << m.toStr() << std::endl;
     std::cout << m.getDigest() << std::endl;
