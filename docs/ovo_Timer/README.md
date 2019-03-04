@@ -4,7 +4,7 @@
 >And also, use `g++ yourCode.cpp -std=c++14 -pthread` to compile <br/>
 ---------
 ### Timer.setTimeout()
-This can let your be executed after certain time.
+This can let your function be executed after certain time.
 #### Params:
  - **auto function** Your function. `Lambda Expression is allowed!`
  - **int delay** Time to delay in milliseconds.
@@ -12,7 +12,6 @@ This can let your be executed after certain time.
 #### Example
 ````C++
 #include <iostream>
-#include <string>
 
 #define _pthread
 
@@ -35,4 +34,42 @@ int main()
 ````
 This will get the following result. (Use Ctrl+C to interrupt)
 >Hey.. After 1s.
+--------------
+### Timer.setInterval()
+This can let your function be executed repetitively with certain time.
+#### Params:
+ - **auto function** Your function. `Lambda Expression is allowed!`
+ - **int delay** Time for every interval in milliseconds.
+
+#### Example
+````C++
+#include <iostream>
+
+#define _pthread
+
+#include "ovo.h"
+
+using namespace std;
+
+void display(){
+    cout << "Hey.. " << endl;
+}
+
+int main()
+{
+    ovo::Timer t = ovo::Timer();
+    t.setsetInterval(dis, 1000); 
+
+    while (1); //Keep the main thread never stop
+    return 0;
+}
+````
+This will get the following result. (Use Ctrl+C to interrupt)
+>Hey..<br/>
+>Hey.. <br/>
+>Hey.. <br/>
+> .<br/>
+> .<br/>
+> .<br/>
+-------------------
 
