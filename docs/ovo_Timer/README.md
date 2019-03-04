@@ -1,7 +1,7 @@
 ## Class Timer
 
-**To use this class, you need to put `#define _pthread` before your `#include "ovo.h"` **
-**And also, use `g++ yourCode.cpp -std=c++14 -pthread` to compile**
+>To use this class, you need to put `#define _pthread` before your `#include "ovo.h"` <br/>
+>And also, use `g++ yourCode.cpp -std=c++14 -pthread` to compile <br/>
 ---------
 ### Timer.setTimeout()
 This can let your be executed after certain time.
