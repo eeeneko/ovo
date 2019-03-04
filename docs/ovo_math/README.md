@@ -14,9 +14,9 @@ This function can generate a Hash md5 value from a string.
 int main()
 {
     std::string s = "a";
-    ovo::math m;
+    ovo::math::md5 m(s);
 
-    std::cout << m.md5(s) << std::endl;
+    std::cout << m.toStr() << std::endl;
     return 0;
 }
 ````
@@ -34,10 +34,9 @@ This will get the following result.
 int main()
 {
     std::string s = "a";
-    ovo::math m;
-    m.md5(s);
+    ovo::math::md5 m(s);
 
-    std::cout << m.toStr(16) << std::endl;
+    std::cout << m.toStr() << std::endl;
     std::cout << m.getDigest() << std::endl;
     return 0;
 }
