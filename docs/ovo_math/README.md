@@ -45,7 +45,7 @@ int main()
 This will get the following result.
 >0cc175b9c0f1b6a8<br/>
 >♀羥估穸?脵鈏w&a
-
+<br/>
 ### math.base64_encode()
 This function can encode a string to base64 format.
 #### Params:
@@ -70,7 +70,7 @@ int main()
 ````
 This will get the following result.
 >YWFhYWE=
-
+<br/>
 ### math.base64_decode()
 This function can decode a string from base64 format.
 #### Params:
