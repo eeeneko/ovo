@@ -105,8 +105,8 @@ namespace ovo{
 
         public:
             static string version;
-            inline void hi(){cout << "Hello OvO~" << endl;};
-            void detail();
+            inline void hi() const {cout << "Hello OvO~" << endl;};
+            void detail() const;
     };
 
     /**
@@ -120,13 +120,17 @@ namespace ovo{
 
         public:
             /*** Files ***/
-            vector<string> name; //File name
-            vector<unsigned int> size; //File size
-            vector<time_t> time_create; //File created time
-            vector<time_t> time_access; //File last accessed time
-            vector<time_t> time_write; //File last write time
-            vector<unsigned int> attrib; //File attribute
-            inline int num(){return name.size();} //Files numbers
+            typedef struct FileInfo {
+                string name; //File name
+                unsigned int size; //File size
+                time_t time_create; //File created time
+                time_t time_access; //File last accessed time
+                time_t time_write; //File last write time
+                unsigned int attrib; //File attribute*/
+            } FileInfo;
+            vector<FileInfo> file;
+            /* Get files numbers */
+            inline int num(){return file.size();} 
             /* Get info of Files */
             void get_files_info(const string path, const string format = "*", const int isSearchSubfolders = 0, const int isShowPath = 0);
 

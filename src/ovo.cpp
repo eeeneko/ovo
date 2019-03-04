@@ -40,7 +40,7 @@ string ovo::info::version = "Version 0.0.1";
  * @param void
  * @return void
  */
-void ovo::info::detail()
+void ovo::info::detail() const
 {
     cout << endl << "Lib Name: ovo" <<endl;
     cout << "Org: EEENeko (https://github.com/eeeNeko)" << endl;
@@ -68,6 +68,7 @@ void ovo::file::get_all_files_info(string path, const string format, const int i
     long hFile = 0;
     //File info struct
     struct _finddata_t fileInfo;
+    FileInfo t_file;
     string p;
 #ifdef linux    
     const string sign = "/";
@@ -82,15 +83,16 @@ void ovo::file::get_all_files_info(string path, const string format, const int i
         {
             if(!(fileInfo.attrib & _A_SUBDIR)){
                 if(isShowPath)
-                    name.push_back(p.assign(path).append(sign).append(fileInfo.name));
+                    t_file.name = p.assign(path).append(sign).append(fileInfo.name);
                 else
-                    name.push_back(p.assign(fileInfo.name));
+                    t_file.name = p.assign(fileInfo.name);
 
-                size.push_back(fileInfo.size);
-                time_create.push_back(fileInfo.time_create);
-                time_access.push_back(fileInfo.time_access);
-                time_write.push_back(fileInfo.time_write);
-                attrib.push_back(fileInfo.attrib);
+                t_file.size = fileInfo.size;
+                t_file.time_create = fileInfo.time_create;
+                t_file.time_access = fileInfo.time_access;
+                t_file.time_write = fileInfo.time_write;
+                t_file.attrib = fileInfo.attrib;
+                file.push_back(t_file);
             }
 
         }while(_findnext(hFile, &fileInfo) == 0);
