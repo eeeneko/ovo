@@ -4,7 +4,7 @@ This function deals with the info of files. It has 4 params.
  - **string path** The path to search (Necessary)
  - **string format** The file format to search e.g. `*.png` (Default: '*')
  - **int isSearchSubfolders** Is the subfolders be searched. (Default: 0)
- - **int isShowPath** Is a path before the name. (Default: 0)
+ - **int isShowPath** Is there a path before the filename. (Default: 0)
 
 The most simple demo for this:
 ````C++
@@ -80,7 +80,6 @@ This will show all the .md files with a path in current and all subfolders.
 >Create Time: Sat Mar 02 18:14:52 2019<br/>
 >Last Access Time: Sat Mar 02 18:14:52 2019<br/>
 >Last Write Time: Sat Mar 02 18:14:52 2019<br/>
-
-
+--------------------
 
 
