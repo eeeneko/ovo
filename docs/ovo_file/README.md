@@ -16,7 +16,7 @@ int main()
     ovo::file f;
     f.get_files_info(".\\");
     for(int i = 0; i < f.num(); i++)
-        std::cout << "FileName: " << f。file[i].name << endl;
+        std::cout << "FileName: " << f.file[i].name << endl;
     return 0;
 }
 ```` 
