@@ -150,6 +150,10 @@ namespace ovo{
     class math {
 
         public:
+            inline string MD5 (const string message) const {
+                md5 m(message);
+                return m.toStr();
+            }
             class md5 {
 
                 public:
