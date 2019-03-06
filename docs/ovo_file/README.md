@@ -1,11 +1,24 @@
 ## Class ovo::file
 ### file.get_files_info() [windows only]
-This function deals with the info of files. It has 4 params.
+Use this function to get information of files.
+#### Params
  - **string path** The path to search (Necessary)
  - **string format** The file format to search e.g. `*.png` (Default: '*')
  - **int isSearchSubfolders** Is the subfolders be searched. (Default: 0)
-
-The most simple demo for this:
+-----------------------
+### file.num()
+ - Use this function to get the number of found files in `file.get_file_info()`.
+---------------------
+### How to get files infomaition?
+ - **file.file[].name** The file name.
+ - **file.file[].path** The file path.
+ - **file.file[].size** The file size in byte.
+ - **file.file[].attrib** The file attribute in int.
+ - **file.file[].time_create** The file created time in time stamp.
+ - **file.file[].time_access** The file last accessed time.
+ - **file.file[].time_write** The file last writen time.
+ -----------------
+#### Example
 ````C++
 #include <iostream>
 #include "ovo.h"
@@ -20,10 +33,10 @@ int main()
 }
 ```` 
 This will show all the files in current position. Such as:
->README.md<br/>
->LICENSE<br/>
+>FileName: README.md<br/>
+>FileName: LICENSE<br/>
 
-You can also do like this:
+#### Advanced Example
 ````C++
 #include <iostream>
 #include <time.h>
