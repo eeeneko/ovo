@@ -65,23 +65,25 @@ namespace ovo{
 
         public:
             /*** Files ***/
-            typedef struct FileInfo {
-                string name; //File name
-                unsigned int size; //File size
-                time_t time_create; //File created time
-                time_t time_access; //File last accessed time
-                time_t time_write; //File last write time
-                unsigned int attrib; //File attribute*/
+            class FileInfo {
+                public:
+                    string name; //File name
+                    string path;
+                    unsigned int size; //File size
+                    time_t time_create; //File created time
+                    time_t time_access; //File last accessed time
+                    time_t time_write; //File last write time
+                    unsigned int attrib; //File attribute*/
             } FileInfo;
-            vector<FileInfo> file;
+            vector<class FileInfo> file;
             /* Get files numbers */
             inline int num(){return file.size();} 
             /* Get info of Files */
-            void get_files_info(const string path, const string format = "*", const int isSearchSubfolders = 0, const int isShowPath = 0);
+            void get_files_info(const string path, const string format = "*", const int isSearchSubfolders = 0);
 
         private:
             /*** Files ***/
-            void get_all_files_info(string path, const string format = "*", const int isShowPath = 0);
+            void get_all_files_info(string path, const string format = "*");
             void get_all_folders_name(string path, vector<string>& folders);
     };
 
@@ -355,12 +357,12 @@ void ovo::info::detail() const
  * @param int isShowPath  #If this is 1, the path would display before every filename
  * @return void
  */
-void ovo::file::get_all_files_info(string path, const string format, const int isShowPath)
+void ovo::file::get_all_files_info(string path, const string format)
 {
     long hFile = 0;
     //File info struct
     struct _finddata_t fileInfo;
-    FileInfo t_file;
+    class FileInfo t_file;
     string p;
 #ifdef linux    
     const string sign = "/";
@@ -374,11 +376,8 @@ void ovo::file::get_all_files_info(string path, const string format, const int i
         do
         {
             if(!(fileInfo.attrib & _A_SUBDIR)){
-                if(isShowPath)
-                    t_file.name = p.assign(path).append(sign).append(fileInfo.name);
-                else
-                    t_file.name = p.assign(fileInfo.name);
-
+                t_file.path = p.assign(path).append(sign).append(fileInfo.name);
+                t_file.name = p.assign(fileInfo.name);
                 t_file.size = fileInfo.size;
                 t_file.time_create = fileInfo.time_create;
                 t_file.time_access = fileInfo.time_access;
@@ -443,7 +442,7 @@ void ovo::file::get_all_folders_name(string path, vector<string>& folders)
  * @param int isShowPath  #If this is 1, the path would display before every filename
  * @return void
  */
-void ovo::file::get_files_info(const string path, const string format, const int isSearchSubfolders, const int isShowPath)
+void ovo::file::get_files_info(const string path, const string format, const int isSearchSubfolders)
 {
 
 #ifdef linux    
@@ -452,7 +451,7 @@ void ovo::file::get_files_info(const string path, const string format, const int
     const string sign = "\\";
 #endif
 
-    get_all_files_info(path, format, isShowPath);
+    get_all_files_info(path, format);
 
     //Search Sub Folders
     if(isSearchSubfolders){
@@ -461,7 +460,7 @@ void ovo::file::get_files_info(const string path, const string format, const int
 
         for(int i = 0; i < foldersPath.size(); i++){
 
-            get_all_files_info(foldersPath[i], format, isShowPath);
+            get_all_files_info(foldersPath[i], format);
         }
     }
 
