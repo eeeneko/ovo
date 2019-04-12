@@ -167,7 +167,7 @@ int main()
 }
 ````
 This will get the following result.
-> before: Such a cute world~
-> Encode: nyAu2sPOR91zny+2w4brwivyHYzDIJV0MDLxonSuztE=
-> Decode: Such a cute world~
+> before: Such a cute world~<br/>
+> Encode: nyAu2sPOR91zny+2w4brwivyHYzDIJV0MDLxonSuztE=<br/>
+> Decode: Such a cute world~<br/>
 
