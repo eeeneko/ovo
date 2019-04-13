@@ -119,3 +119,55 @@ int main()
 ````
 This will get the following result.
 >aaaaa
+
+--------------
+### math.aes_ini()
+在AES加密前使用本函数来设置密钥。
+#### Params:
+ - **string key** 加密解密密钥
+ - **string iv** chain参数，可以留空
+ 
+------------
+### math.aes_encode()
+AES加密，使用前请先调用math.aes_ini()设置密钥
+#### Params:
+ - **string strSrc** 待加密字符串
+#### Return:
+ - **string str** 加密后的字符串
+--------------
+### math.aes_decode()
+AES解密，使用前请先调用math.aes_ini()设置密钥
+#### Params:
+ - **string strSrc** 待解密字符串
+#### Return:
+ - **string str** 解密后的字符串
+#### Example
+````C++
+#include <iostream>
+#include <string>
+#include "ovo.h"
+  
+int main()
+{
+    ovo::math m;
+    
+    //初始化aes模块
+    m.aes_ini("dq3tea09fyd98hds"); //这里填入的是密钥，可以是任意长度
+    
+    string str1 = "Such a cute world~";
+    cout << "before: " << str1 << endl;
+    //加密
+    string str2 = m.aes_encode(str1);
+    cout << "Encode: " << str2 << endl;
+    //解密
+    string str3 = m.aes_decode(str2);
+    cout << "Decode: " << str3 << endl;
+    
+    return 0;
+}
+````
+This will get the following result.
+> before: Such a cute world~<br/>
+> Encode: nyAu2sPOR91zny+2w4brwivyHYzDIJV0MDLxonSuztE=<br/>
+> Decode: Such a cute world~<br/>
+

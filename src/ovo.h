@@ -21,6 +21,7 @@
 #include <cstring>
 #include <exception>
 #include <map>
+#include <iomanip>
 
 #ifdef _pthread
 
@@ -354,7 +355,7 @@ namespace ovo{
             string toStr(const T& from) const{
 
                 stringstream ss;
-                ss << from;
+                ss << setprecision(15) << from;
                 string s;
                 ss >> s;
                 return s;
