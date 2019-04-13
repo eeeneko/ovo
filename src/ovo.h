@@ -20,6 +20,7 @@
 #include <vector>
 #include <cstring>
 #include <exception>
+#include <map>
 
 #ifdef _pthread
 
@@ -185,7 +186,7 @@ namespace ovo{
             /*** AES ***/
         public:
             aes_ini(std::string key, std::string iv = ""){
-                key = (this->sha256(key)).substr(0, 16);
+                key = (this->md5(key)).substr(0, 16);
                 _aes_key = key;
                 if(iv == "") this->_aes_iv = this->_aes_key;
                 else _aes_iv = (this->sha256(iv)).substr(0, 16);
@@ -261,6 +262,147 @@ namespace ovo{
     };
 
 #endif
+
+
+    /**
+    * Data Storage
+    *
+    * @author yimian
+    * @category ovo
+    * @package ovo
+    */
+    class data{
+
+        public:
+            data(){};
+            data(const data& d){
+                this->_data = d._data;
+            };
+            ~data(){
+                this->_data.erase(this->_data.begin(),this->_data.end());
+            };
+            /* insert data */
+            template <typename T, typename Y>
+            inline void insert(const T& key, const Y& val){
+                if(this->isExist(key)) this->_data[this->toStr(key)] = this->toStr(val);
+                else this->_data.insert(make_pair(this->toStr(key), this->toStr(val)));
+            };
+
+            /* overload [] */
+            template <typename T>
+            string& operator[](const T& i){
+                return this->_data[this->toStr(i)];
+            }
+            /* overload [] */
+            template <typename T>
+            const string& operator[](const T& i) const{
+                return this->_data[this->toStr(i)];
+            };
+            /* find begin */
+            inline map<string, string>::iterator begin(){
+                return _data.begin();
+            }
+            /* find end */
+            inline map<string, string>::iterator end(){
+                return _data.end();
+            }
+            /* find elements's address */
+            template <typename T>
+            inline map<string, string>::iterator find(const T& i){
+                return _data.find(this->toStr(i));
+            }
+            /* clear all elements */
+            inline void clear(){
+                this->_data.erase(this->_data.begin(),this->_data.end());
+            }
+            /* clear elements */
+            template <typename T>
+            inline void clear(const T& key){
+                if(isExist(key)){
+                    map<string, string>::iterator t_iter = this->find(key);
+                    this->_data.erase(t_iter);
+                }
+            }
+            /* clear elements */
+            template <typename T>
+            inline void erase(const T& key){
+                if(isExist(key)){
+                    map<string, string>::iterator t_iter = this->find(key);
+                    this->_data.erase(t_iter);
+                }
+            }
+            /* iterator */
+            map<string, string>::iterator iter;
+            /* if key is exist */
+            template <typename T>
+            inline int isExist(T& key) const{
+                return this->_data.count(this->toStr(key));
+            }
+            /* get size of data */
+            inline int size() const{
+                return _data.size();
+            }
+
+        private:
+            map<string, string> _data;
+            /* string to string */
+            inline string toStr(const string& from) const{
+                return from;
+            }
+            /* from T to string */
+            template <typename T>
+            string toStr(const T& from) const{
+
+                stringstream ss;
+                ss << from;
+                string s;
+                ss >> s;
+                return s;
+            }
+
+    };
+
+    /**
+    * Database operation
+    *
+    * @author yimian
+    * @category ovo
+    * @package ovo
+    */
+    class db{
+
+        public:
+            db(){
+                this->_path = "data\\";
+                this->_AES = false;
+            }
+            /* construct with path and method */
+            db(const string& s, const string method = ""){
+                this->_path = s + "\\";
+                if(method == "AES") this->_AES = true;
+                else this->_AES = false;
+            }
+            /* push data to database */
+            void pushData(data& data, const string& key);
+            /* get data from database */
+            data getData(const string& key);
+            /* del data */
+            void del(const string& key);
+
+        private:
+            ovo::math m;
+            string _path;
+            bool _AES;
+            /* generate file name */
+            inline string getFName(string key){
+                return this->_path + m.md5(key + "_ovo_db") + ".ovo_db";
+            }
+            /* check folder */
+            inline void checkFolder(){
+                string cmd = "if not exist " + _path + " md " + _path;
+                system(cmd.c_str());
+            }
+    };
 
 }
 
@@ -2314,6 +2456,84 @@ void ovo::Timer::stop()
 
 #endif
 
+
+
+/****** Class db ******/
+
+/**
+ * push data to database 
+ *
+ * @Author yimian
+ * @access public
+ * @param data data
+ * @param string key
+ * @return void
+ */
+void ovo::db::pushData(data& data, const string& key){
+
+    if(this->_AES) m.aes_ini(key);
+    this->checkFolder();
+
+    string fName = getFName(key);
+
+    ofstream ous(fName.c_str());
+    data.iter=data.begin();
+    for(;data.iter!=data.end();data.iter++){
+        if(_AES){
+            ous << m.aes_encode(data.iter->first)<<" "<<m.aes_encode(data.iter->second)<<endl;
+        }else{
+            ous << m.base64_encode(data.iter->first)<<" "<<m.base64_encode(data.iter->second)<<endl;
+        }
+    }
+}
+
+
+/**
+ * get data from database 
+ *
+ * @Author yimian
+ * @access public
+ * @param string key
+ * @return data data
+ */
+ovo::data ovo::db::getData(const string& key){
+
+    data data;
+
+    if(_AES) m.aes_ini(key);
+    this->checkFolder();
+
+    string fName = getFName(key);
+
+    string t_first;
+    string t_second;
+
+    ifstream ins(fName.c_str());
+    if(!ins) return data;
+    while(!ins.eof()){
+        ins >> t_first >> t_second;
+        if(_AES){
+            data.insert((m.aes_decode(t_first)), m.aes_decode(t_second));
+        }else{
+            data.insert((m.base64_decode(t_first)), m.base64_decode(t_second));
+        }
+    }
+    return data;
+}
+
+/**
+ * delete data from database 
+ *
+ * @Author yimian
+ * @access public
+ * @param string key
+ * @return void
+ */
+void ovo::db::del(const string& key){
+
+    string cmd = "del " + this->getFName(key);
+    system(cmd.c_str());
+}
 
 
 
