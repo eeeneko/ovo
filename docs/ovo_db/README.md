@@ -24,4 +24,23 @@
     return 0;
  }
  ````
+ 运行以上代码将显示：
+ > 666<br/>
+ 
+ ### 进阶
+ - 请查看以下代码
+ ````C++
+ #include <iostream>
+ #include "ovo.h"
+ 
+ int main()
+ {
+    ovo::db db("database\\my_data"); //自定义数据库文件夹
+    ovo::db db_second("database\\my_second_data", "AES"); //指定数据加密方式为AES, 有一定几率解密失败，不建议
+
+    return 0;
+ }
+ ````
+ 
+ 
 
