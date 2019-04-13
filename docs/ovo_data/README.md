@@ -16,13 +16,13 @@
     return 0;
  }
  ````
- - 以上代码将输出：
- > Tomato
+以上代码将输出：
+ > Tomato<br/>
  
  ### 进阶使用
  - 使用以下代码进阶
  ````C++
-  #include <iostream>
+ #include <iostream>
  #include "ovo.h"
  
  int main()
@@ -39,12 +39,12 @@
                                     //如果你想使用其它类型请由string类型转换
     d.size(); //返回data的大小，即包含几个键值对
     d.isExist("name"); //查看某键名是否存在，存在返回1，否则为0
-    d.clear(); //清空所有data
+    //d.clear(); //清空所有data
     d.clear("name"); //删除"name"键值对
     
     //如果你想遍历元素，请使用内置迭代器，方法如下
     d.iter = d.begin();
-    for(;d.iter < d.end(); d.iter++){
+    for(;d.iter != d.end(); d.iter++){
         std::cout << "Key: " << d.iter->first << "  val: " << d.iter->second << endl;
     }
     
@@ -52,3 +52,8 @@
     return 0;
  }
  ````
+ 以上代码将输出
+ > Potato<br/>
+ > Key: float  val: 3.1415926<br/>
+ > Key: kk  val: a<br/>
+ > Key: num  val: 97<br/>
