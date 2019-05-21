@@ -1,5 +1,11 @@
 ## Class ovo::math
 
+### math.rand(int a, int b)
+Generate a rand number between a(include) and b(include).
+
+### math.randStr(unsigned int length = 0)
+Gnerate a rand string.
+
 ### math.md5()
 This function can generate a Hash md5 value from a string.
 #### Params:
