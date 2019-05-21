@@ -1973,9 +1973,9 @@ void ovo::db::pushData(data& data, const string& key){
     data.iter=data.begin();
     for(;data.iter!=data.end();data.iter++){
         if(_AES){
-            ous << m.aes_encode(data.iter->first)<<" "<<m.aes_encode(data.iter->second)<<endl;
+            ous << "_" << m.aes_encode(data.iter->first)<<" _"<<m.aes_encode(data.iter->second)<<endl;
         }else{
-            ous << m.base64_encode(data.iter->first)<<" "<<m.base64_encode(data.iter->second)<<endl;
+            ous << "_" << m.base64_encode(data.iter->first)<<" _"<<m.base64_encode(data.iter->second)<<endl;
         }
     }
     ous.close();
@@ -2002,9 +2002,9 @@ void ovo::db::addData(data& data, const string& key){
     data.iter=data.begin();
     for(;data.iter!=data.end();data.iter++){
         if(_AES){
-            ous << m.aes_encode(data.iter->first)<<" "<<m.aes_encode(data.iter->second)<<endl;
+            ous << "_" << m.aes_encode(data.iter->first)<<" _"<<m.aes_encode(data.iter->second)<<endl;
         }else{
-            ous << m.base64_encode(data.iter->first)<<" "<<m.base64_encode(data.iter->second)<<endl;
+            ous << "_" << m.base64_encode(data.iter->first)<<" _"<<m.base64_encode(data.iter->second)<<endl;
         }
     }
     ous.close();
@@ -2038,15 +2038,51 @@ ovo::data ovo::db::getData(const string& key){
     }
     while(!ins.eof()){
         ins >> t_first >> t_second;
+        t_first = t_first.substr(1);
+        t_second = t_second.substr(1);
         if(_AES){
             data.insert((m.aes_decode(t_first)), m.aes_decode(t_second));
         }else{
             data.insert((m.base64_decode(t_first)), m.base64_decode(t_second));
         }
     }
+    data.clear(m.base64_decode(t_first));
     ins.close();
     return data;
 }
+
+
+/**
+ * classify data in database 
+ *
+ * @Author yimian
+ * @access public
+ * @param string key
+ * @param data delData
+ * @return void
+ */
+void ovo::db::classify(const string& key, std::vector<string> v){
+
+    ovo::data d;
+
+    d = this->getData(key);
+    if(d["_isExist"] == "NO") return;
+
+    d.classify();
+
+    if(!v.size()){
+        this->pushData(d, key);
+        return;
+    }
+
+    for(int i = 0; i < v.size(); i ++){
+
+        d.clear(v[i]);
+    }
+
+    this->pushData(d, key);
+}
+
 
 
 

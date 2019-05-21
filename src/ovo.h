@@ -285,18 +285,20 @@ namespace ovo{
             /* insert data */
             template <typename T, typename Y>
             inline void insert(const T& key, const Y& val){
-                if(this->isExist(key)) this->_data[this->toStr(key)] = this->toStr(val);
-                else this->_data.insert(make_pair(this->toStr(key), this->toStr(val)));
+                this->isExist(key);
+                this->_data[this->toStr(key)] = this->toStr(val);
             };
 
             /* overload [] */
             template <typename T>
             string& operator[](const T& i){
+                isExist(i);
                 return this->_data[this->toStr(i)];
             }
             /* overload [] */
             template <typename T>
             const string& operator[](const T& i) const{
+                isExist(i);
                 return this->_data[this->toStr(i)];
             };
             /* find begin */
@@ -319,8 +321,8 @@ namespace ovo{
             /* clear elements */
             template <typename T>
             inline void clear(const T& key){
-                if(isExist(key)){
-                    map<string, string>::iterator t_iter = this->find(key);
+                if(this->_data.count(this->toStr(key))){
+                    map<string, string>::iterator t_iter = this->find(this->toStr(key));
                     this->_data.erase(t_iter);
                 }
             }
@@ -336,8 +338,24 @@ namespace ovo{
             map<string, string>::iterator iter;
             /* if key is exist */
             template <typename T>
-            inline int isExist(T& key) const{
-                return this->_data.count(this->toStr(key));
+            inline bool isExist(T& key){
+
+                if(this->_data.count(this->toStr(key)) && this->_data[this->toStr(key)] != "undefined"){
+                    return true;
+                }
+                this->_data[this->toStr(key)] = "undefined";
+                return false;
+            }
+            /* classify elements */
+            void classify(){
+                map<string, string>::iterator t_iter = this->_data.begin();
+                while(t_iter != this->_data.end()){
+                    if(t_iter->second == "undefined"){
+                        this->_data.erase(t_iter++);
+                    }else{
+                        t_iter++;
+                    }
+                }
             }
             /* get size of data */
             inline int size() const{
@@ -389,6 +407,13 @@ namespace ovo{
             void addData(data& data, const string& key);
             /* get data from database */
             data getData(const string& key);
+            /* classify data in db */
+            inline void classify(const string& key){
+                std::vector<string> v;
+                this->classify(key, v);
+            };
+            /* classify data in db */
+            void classify(const string& key, std::vector<string> v);
             /* del data */
             void del(const string& key);
 
