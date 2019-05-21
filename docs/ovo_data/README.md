@@ -37,8 +37,9 @@
     d.insert("float", 3.1415926); //插入浮点数，最高支持15位有效数字
     std::cout << d["name"] << endl; //输出数据，无论你的输入格式如何，数据的输出格式将是string
                                     //如果你想使用其它类型请由string类型转换
-    d.size(); //返回data的大小，即包含几个键值对
-    d.isExist("name"); //查看某键名是否存在，存在返回1，否则为0
+    d.size(); //返回data的大小，即包含几个键值对，包括undefined内容
+    d.isExist("name"); //查看某键名是否存在，存在返回true，否则为false
+    d.classify(); //整理data，清除包含undefined内容
     //d.clear(); //清空所有data
     d.clear("name"); //删除"name"键值对
     
