@@ -1,4 +1,9 @@
 ## Class ovo::string
+
+### void ovo::String::split(const std::string& s, std::vector<std::string>& v, const std::string& c)
+
+Split the string.
+
 ### replaceStr
 ````C++
 void replaceStr(string& str, const string fromStr = " ", const string toStr = "", int pos = 0, const int end = 99999)
