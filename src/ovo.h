@@ -94,6 +94,19 @@ namespace ovo{
     };
 
     /**
+    * string tools
+    *
+    * @author yimian
+    * @category ovo
+    * @package ovo
+    */
+    class String{
+
+        public:
+            void split(const std::string& s, std::vector<std::string>& v, const std::string& c);
+    };
+
+    /**
     * Math operation
     *
     * @author yimian, Jiewei Wei(md5), Rene Nyffenegger(base64), Louis Nam(sha256)
@@ -426,9 +439,9 @@ namespace ovo{
             /* no-sql */
 
             /* push data to database */
-            void pushData(data& data, const string& key);
+            void pushData(const string& key, data& data);
             /* add data to database */
-            void addData(data& data, const string& key);
+            void addData(const string& key, data& data);
             /* get data from database */
             data getData(const string& key);
             /* classify data in db */
@@ -444,8 +457,15 @@ namespace ovo{
             /* sql */
             void _createTable(const string& tableName, std::vector<string> v){
                 ovo::data d;
+                string keysName = "";
+                for(int i = 0; i < v.size(); i ++){
+                    d[v[i]] = this->generateIndex(v[i]);
 
+                }
+                this->pushData(generateTableName(tableName), d);
             };
+
+
 
 
         private:

@@ -166,8 +166,22 @@ void ovo::file::get_files_info(const string path, const string format, const int
 
 }
 
+/* String class */
 
 
+void ovo::String::split(const std::string& s, std::vector<std::string>& v, const std::string& c)
+{
+    std::string::size_type pos1, pos2;
+    pos2 = s.find(c);
+    pos1 = 0;
+    while(std::string::npos != pos2){
+        v.push_back(s.substr(pos1, pos2-pos1));
+ 
+        pos1 = pos2 + c.size();
+        pos2 = s.find(c, pos1);
+    }
+    if(pos1 != s.length()) v.push_back(s.substr(pos1));
+}
 
 
 /****** Class math ******/
@@ -1962,7 +1976,7 @@ void ovo::Timer::stop()
  * @param string key
  * @return void
  */
-void ovo::db::pushData(data& data, const string& key){
+void ovo::db::pushData(const string& key, data& data){
 
     if(this->_AES) m.aes_ini(key);
     this->checkFolder();
@@ -1991,7 +2005,7 @@ void ovo::db::pushData(data& data, const string& key){
  * @param string key
  * @return void
  */
-void ovo::db::addData(data& data, const string& key){
+void ovo::db::addData(const string& key, data& data){
 
     if(this->_AES) m.aes_ini(key);
     this->checkFolder();
@@ -2071,7 +2085,7 @@ void ovo::db::classify(const string& key, std::vector<string> v){
     d.classify();
 
     if(!v.size()){
-        this->pushData(d, key);
+        this->pushData(key, d);
         return;
     }
 
@@ -2080,7 +2094,7 @@ void ovo::db::classify(const string& key, std::vector<string> v){
         d.clear(v[i]);
     }
 
-    this->pushData(d, key);
+    this->pushData(key, d);
 }
 
 
