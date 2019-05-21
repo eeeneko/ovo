@@ -22,6 +22,8 @@
 #include <exception>
 #include <map>
 #include <iomanip>
+#include <cstdlib>
+#include <ctime>
 
 #ifdef _pthread
 
@@ -99,6 +101,25 @@ namespace ovo{
     * @package ovo
     */
     class math {
+
+        public:
+            math(){
+                srand(time(NULL));
+            }
+
+            /* rand */
+        public:
+            unsigned long randNum;
+            inline int rand(const int& a, const int& b){
+                return (clock() + (randNum++) * std::rand()) % std::abs(b - a + 1) + a;
+            }
+
+            inline string randStr(const unsigned int length = 0){
+                if(!length){
+                    return md5(to_string(clock()) +  to_string(this->randNum++));
+                }
+                return (sha256(to_string(clock()) +  to_string(this->randNum++))).substr(0, length);
+            }
 
             /*** md5 ***/
         public:
@@ -401,6 +422,9 @@ namespace ovo{
                 if(method == "AES") this->_AES = true;
                 else this->_AES = false;
             }
+
+            /* no-sql */
+
             /* push data to database */
             void pushData(data& data, const string& key);
             /* add data to database */
@@ -417,6 +441,13 @@ namespace ovo{
             /* del data */
             void del(const string& key);
 
+            /* sql */
+            void _createTable(const string& tableName, std::vector<string> v){
+                ovo::data d;
+
+            };
+
+
         private:
             ovo::math m;
             string _path;
@@ -429,6 +460,14 @@ namespace ovo{
             inline void checkFolder(){
                 string cmd = "if not exist " + _path + " md " + _path;
                 system(cmd.c_str());
+            }
+
+            inline string generateTableName(const string& tableName){
+                return m.sha256("__OVO_DB_TABLE__" + tableName);
+            }
+
+            inline string generateIndex(const string& salt = ""){
+                return m.sha256(m.randStr() + salt);
             }
     };
 
