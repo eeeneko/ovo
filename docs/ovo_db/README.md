@@ -31,6 +31,7 @@
  - 请查看以下代码
  ````C++
  #include <iostream>
+ #include <vector>
  #include "ovo.h"
  
  int main()
@@ -42,6 +43,13 @@
     if(newData["_isExist"] == "NO"){
         //数据块不存在！！
     }
+    
+    db.addData(newData, "indexName"); //追加数据
+    
+    std::vector<string> v;
+    v[0] = "777";
+    db.classify("indexName"); //整理数据块以提高效率
+    db.classify("indexName", v); //整理时删除指定键名的键值对
 
     return 0;
  }
