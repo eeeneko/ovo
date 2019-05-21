@@ -2067,6 +2067,49 @@ ovo::data ovo::db::getData(const string& key){
 
 
 /**
+ * get data from database 
+ *
+ * @Author yimian
+ * @access public
+ * @param string key
+ * @return data data
+ */
+void ovo::db::getData(const string& key, std::vector<string>& v1, std::vector<string>& v2){
+
+
+    if(_AES) m.aes_ini(key);
+    this->checkFolder();
+
+    string fName = getFName(key);
+
+    string t_first;
+    string t_second;
+
+    ifstream ins(fName.c_str());
+    if(!ins){
+        return ;
+    }
+    while(!ins.eof()){
+
+        ins >> t_first >> t_second;
+        t_first = t_first.substr(1);
+        t_second = t_second.substr(1);
+        if(_AES){
+            v1.push_back((m.aes_decode(t_first)));
+            v2.push_back(m.aes_decode(t_second));
+        }else{
+            v1.push_back((m.base64_decode(t_first)));
+            v2.push_back(m.base64_decode(t_second));
+        }
+    }
+    v1.pop_back();
+    v2.pop_back();
+    ins.close();
+    return ;
+}
+
+
+/**
  * classify data in database 
  *
  * @Author yimian

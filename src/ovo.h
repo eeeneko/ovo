@@ -24,6 +24,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
 
 #ifdef _pthread
 
@@ -124,14 +125,14 @@ namespace ovo{
         public:
             unsigned long randNum;
             inline int rand(const int& a, const int& b){
-                return (clock() + (randNum++) * std::rand()) % std::abs(b - a + 1) + a;
+                return (time(NULL) + (randNum++) * std::rand()) % std::abs(b - a + 1) + a;
             }
 
             inline string randStr(const unsigned int length = 0){
                 if(!length){
-                    return md5(to_string(clock()) +  to_string(this->randNum++));
+                    return md5(to_string(time(NULL)) +  to_string(this->randNum++));
                 }
-                return (sha256(to_string(clock()) +  to_string(this->randNum++))).substr(0, length);
+                return (sha256(to_string(time(NULL)) +  to_string(this->randNum++))).substr(0, length);
             }
 
             /*** md5 ***/
@@ -310,6 +311,7 @@ namespace ovo{
 
         public:
             data(){};
+            friend class db;
             data(const data& d){
                 this->_data = d._data;
             };
@@ -391,6 +393,29 @@ namespace ovo{
                     }
                 }
             }
+
+            /* for each */
+            void forEach(auto f){
+                map<string, string>::iterator t_iter = this->_data.begin();
+                while(t_iter != this->_data.end()){
+                    f(t_iter->first, t_iter->second);
+                    t_iter++;
+                }
+            };
+
+           /* display all elements */
+            string showAll(){
+                string s = "{";
+                map<string, string>::iterator t_iter = this->_data.begin();
+                while(t_iter != this->_data.end()){
+
+                    s += "\n  \"" + t_iter->first + "\": \"" + t_iter->second + "\",";
+                    t_iter++;
+                    
+                }
+                s += "\n}";
+                return s;
+            }
             /* get size of data */
             inline int size() const{
                 return _data.size();
@@ -444,6 +469,8 @@ namespace ovo{
             void addData(const string& key, data& data);
             /* get data from database */
             data getData(const string& key);
+            /* get data from database */
+            void getData(const string& key, std::vector<string>& v1, std::vector<string>& v2);
             /* classify data in db */
             inline void classify(const string& key){
                 std::vector<string> v;
@@ -456,20 +483,229 @@ namespace ovo{
 
             /* sql */
             void _createTable(const string& tableName, std::vector<string> v){
+                std::vector<string> index;
+                this->_createTable(tableName, v, index);
+            };
+            void _createTable(const string& tableName, std::vector<string> v, std::vector<string> index){
                 ovo::data d;
                 string keysName = "";
+                string indexNames = "";
                 for(int i = 0; i < v.size(); i ++){
                     d[v[i]] = this->generateIndex(v[i]);
-
+                    keysName += v[i] + "||$$||";
                 }
+
+                for(int i = 0; i < index.size(); i ++){
+                    d[this->getIndexName(index[i])] = this->generateIndex(this->getIndexName(index[i]));
+                    indexNames += this->getIndexName(index[i]) + "||$$||";
+                }
+
+                d["__OVO_KEYS__"] = keysName;
+                d["__OVO_INDEX__"] = indexNames;
+                d["__OVO_LIST__"] = generateIndex();
+                d["__OVO_DEL_LIST__"] = generateIndex();
                 this->pushData(generateTableName(tableName), d);
             };
 
+            void insertSQL(const string& tableName, ovo::data d){
+                ovo::data temp;
+
+                temp = this->_getTableKeys(tableName, true);
+                temp = d;
+
+                string id = this->generateIndex();
+
+                this->pushData(id, temp);
+
+                temp.clear();
+
+                temp[id] = to_string(time(NULL));
+
+                this->addData(this->_getTableList(tableName), temp);
+
+                ovo::data index = this->_getTableIndex(tableName);
+
+                for(auto i : index._data){
+
+                    temp.clear();
+                    if(d[i.first.substr(15)] != "undefined")
+                    temp[d[i.first.substr(15)]] = id;
+                    this->addData(i.second, temp);
+                }
+
+            };
+
+            std::vector<ovo::data> getSQL(const string& tableName, const string& index, const string& val){
+
+                ovo::data indexList;
+                std::vector<string> v;
+                std::vector<ovo::data> o;
+
+                indexList = this->_getTableIndex(tableName);
+                if(indexList["__TABLE_INDEX__" + index] == "undefined"){
+                    return o;
+                }
+
+                v = this->_getItemAddress(indexList, index, val);
+
+                for(string i : v){
+                    o.push_back(this->getData(i));
+                }
+
+                return o;
+
+            };
+
+            std::vector<ovo::data> getSQL(const string& tableName, ovo::data& d){
+
+                ovo::data indexList;
+                std::vector<std::vector<string>> v;
+                std::vector<ovo::data> o;
+
+                indexList = this->_getTableIndex(tableName);
+
+
+                d.forEach([&](string index, string val){
+
+                    v.push_back(this->_getItemAddress(indexList, index, val));
+                });
+
+                for(string i : this->_getInterSection(v)){
+                    o.push_back(this->getData(i));
+                }
+
+                return o;
+            };
+            std::vector<ovo::data> getSQL(const string& tableName){
+
+                ovo::data indexList;
+                std::vector<ovo::data> o;
+
+                indexList = this->getData(this->_getTableList(tableName));
+
+
+                for(auto i : indexList){
+                    o.push_back(this->getData(i.first));
+                }
+
+                return o;
+            };
+            std::vector<string> _getInterSection(std::vector<std::vector<string>> v){
+
+                std::vector<string> vv;
+
+
+                if(v.size() == 1){
+                    return v[0];
+                }
+
+                for(int i = 0; i < v[0].size(); i ++){
+
+                    int cnt = 0;
+
+                    for(int ii = 0; ii < v.size(); ii ++){
+
+                        if(find(v[ii].begin(), v[ii].end(), v[0][i]) != v[ii].end()){
+
+                            cnt ++;
+                        }
+                    }
+
+                    if(cnt == v.size()){
+                        vv.push_back(v[0][i]);
+                    }
+                }
+
+                return vv;
+
+
+            }
+
+            std::vector<string> _getItemAddress(ovo::data& indexList, const string& index, const string& val){
+
+                std::vector<string> v1, v2, v3;
+
+                if(indexList["__TABLE_INDEX__" + index] == "undefined"){
+                    return v3;
+                }
+
+                this->getData(indexList["__TABLE_INDEX__" + index], v1, v2);
+
+                for(int i = 0; i < v1.size(); i ++){
+
+                    if(v1[i] == val){
+                        v3.push_back(v2[i]);
+                    }
+                }
+
+                return v3;
+            }
+
+            void _getAll(ovo::data& indexList, std::vector<string>& v2){
+
+                std::vector<string> v1;
+
+                if(indexList["__TABLE_INDEX__"] == "undefined"){
+                    return ;
+                }
+
+                this->getData(indexList["__OVO_LIST__"], v1, v2);
+
+                return ;
+            }
+
+            ovo::data _getTableKeys(const string& tableName, const bool isNULL = false){
+                ovo::data d, o;
+
+                d = this->getData(generateTableName(tableName));
+                std::vector<string> v;
+
+                S.split(d["__OVO_KEYS__"], v, "||$$||");
+
+                for(int i = 0; i < v.size(); i ++){
+                    if(isNULL){
+                        o[v[i]];
+                    }else{
+                         o[v[i]] = d[v[i]];                  
+                    }
+                }
+
+                return o;
+            };
+
+
+            ovo::data _getTableIndex(const string& tableName){
+                ovo::data d, o;
+
+                d = this->getData(generateTableName(tableName));
+                std::vector<string> v;
+
+                S.split(d["__OVO_INDEX__"], v, "||$$||");
+
+                for(int i = 0; i < v.size(); i ++){
+                    o[v[i]] = d[v[i]];
+                }
+
+                return o;
+            };
+
+            string _getTableList(const string& tableName){
+                ovo::data d;
+
+                d = this->getData(generateTableName(tableName));
+
+                return d["__OVO_LIST__"];
+            };
+
+            void _delTable(const string& tableName){
+                this->del(generateTableName(tableName));
+            };
 
 
 
         private:
             ovo::math m;
+            ovo::String S;
             string _path;
             bool _AES;
             /* generate file name */
@@ -483,7 +719,11 @@ namespace ovo{
             }
 
             inline string generateTableName(const string& tableName){
-                return m.sha256("__OVO_DB_TABLE__" + tableName);
+                return "__OVO_DB_TABLE__" + tableName;
+            }
+
+            inline string getIndexName(const string& index){
+                return "__TABLE_INDEX__" + index;
             }
 
             inline string generateIndex(const string& salt = ""){
