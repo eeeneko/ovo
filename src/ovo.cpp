@@ -1978,6 +1978,36 @@ void ovo::db::pushData(data& data, const string& key){
             ous << m.base64_encode(data.iter->first)<<" "<<m.base64_encode(data.iter->second)<<endl;
         }
     }
+    ous.close();
+}
+
+
+/**
+ * add data to database 
+ *
+ * @Author yimian
+ * @access public
+ * @param data data
+ * @param string key
+ * @return void
+ */
+void ovo::db::addData(data& data, const string& key){
+
+    if(this->_AES) m.aes_ini(key);
+    this->checkFolder();
+
+    string fName = getFName(key);
+
+    ofstream ous(fName.c_str(), ios::app);
+    data.iter=data.begin();
+    for(;data.iter!=data.end();data.iter++){
+        if(_AES){
+            ous << m.aes_encode(data.iter->first)<<" "<<m.aes_encode(data.iter->second)<<endl;
+        }else{
+            ous << m.base64_encode(data.iter->first)<<" "<<m.base64_encode(data.iter->second)<<endl;
+        }
+    }
+    ous.close();
 }
 
 
@@ -2014,6 +2044,7 @@ ovo::data ovo::db::getData(const string& key){
             data.insert((m.base64_decode(t_first)), m.base64_decode(t_second));
         }
     }
+    ins.close();
     return data;
 }
 

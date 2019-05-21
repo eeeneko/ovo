@@ -385,6 +385,8 @@ namespace ovo{
             }
             /* push data to database */
             void pushData(data& data, const string& key);
+            /* add data to database */
+            void addData(data& data, const string& key);
             /* get data from database */
             data getData(const string& key);
             /* del data */
