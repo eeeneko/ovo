@@ -2052,6 +2052,7 @@ ovo::data ovo::db::getData(const string& key){
     }
     while(!ins.eof()){
         ins >> t_first >> t_second;
+        if(!t_first.length()>=1 || !t_second.length()>=1) return data;
         t_first = t_first.substr(1);
         t_second = t_second.substr(1);
         if(_AES){
