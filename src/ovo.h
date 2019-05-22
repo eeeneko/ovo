@@ -482,11 +482,11 @@ namespace ovo{
             void del(const string& key);
 
             /* sql */
-            void _createTable(const string& tableName, std::vector<string> v){
+            void createTable(const string& tableName, std::vector<string> v){
                 std::vector<string> index;
-                this->_createTable(tableName, v, index);
+                this->createTable(tableName, v, index);
             };
-            void _createTable(const string& tableName, std::vector<string> v, std::vector<string> index){
+            void createTable(const string& tableName, std::vector<string> v, std::vector<string> index){
                 ovo::data d;
                 string keysName = "";
                 string indexNames = "";
@@ -522,7 +522,7 @@ namespace ovo{
 
                 temp.forEach([&](string first, string second){
                     if(d._data.count(first)){
-                        second = d[first];
+                        temp[first] = d[first];
                     }
                 });
 
