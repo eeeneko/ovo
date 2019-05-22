@@ -6,7 +6,7 @@
  * @package ovo.cpp
  * @copyright Copyright (c) 2019 EEENeko (https://github.com/eeeneko)
  * @license GNU General Public License 3.0
- * @version 0.0.1
+ * @version 0.0.2
  */
 
 
@@ -495,9 +495,17 @@ namespace ovo{
                     keysName += v[i] + "||$$||";
                 }
 
-                for(int i = 0; i < index.size(); i ++){
-                    d[this->getIndexName(index[i])] = this->generateIndex(this->getIndexName(index[i]));
-                    indexNames += this->getIndexName(index[i]) + "||$$||";
+                if(index.size()){
+                    for(int i = 0; i < index.size(); i ++){
+                        d[this->getIndexName(index[i])] = this->generateIndex(this->getIndexName(index[i]));
+                        indexNames += this->getIndexName(index[i]) + "||$$||";
+                    }
+                }else{
+                    for(int i = 0; i < v.size(); i ++){
+                        d[this->getIndexName(v[i])] = this->generateIndex(this->getIndexName(v[i]));
+                        indexNames += this->getIndexName(v[i]) + "||$$||";
+                    }
+
                 }
 
                 d["__OVO_KEYS__"] = keysName;
@@ -511,7 +519,12 @@ namespace ovo{
                 ovo::data temp;
 
                 temp = this->_getTableKeys(tableName, true);
-                temp = d;
+
+                temp.forEach([&](string first, string second){
+                    if(d._data.count(first)){
+                        second = d[first];
+                    }
+                });
 
                 string id = this->generateIndex();
 
@@ -590,6 +603,48 @@ namespace ovo{
 
                 return o;
             };
+
+            unsigned int getNumSQL(const string& tableName, const string& index, const string& val){
+
+                ovo::data indexList;
+                std::vector<string> v;
+
+                indexList = this->_getTableIndex(tableName);
+                if(indexList["__TABLE_INDEX__" + index] == "undefined"){
+                    return 0;
+                }
+
+                v = this->_getItemAddress(indexList, index, val);
+
+                return v.size();
+
+            };
+
+            unsigned int getNumSQL(const string& tableName, ovo::data& d){
+
+                ovo::data indexList;
+                std::vector<std::vector<string>> v;
+
+                indexList = this->_getTableIndex(tableName);
+
+
+                d.forEach([&](string index, string val){
+
+                    v.push_back(this->_getItemAddress(indexList, index, val));
+                });
+
+                return this->_getInterSection(v).size();
+            };
+            unsigned int getNumSQL(const string& tableName){
+
+                ovo::data indexList;
+
+                indexList = this->getData(this->_getTableList(tableName));
+
+                return indexList.size();
+            };
+
+
             std::vector<string> _getInterSection(std::vector<std::vector<string>> v){
 
                 std::vector<string> vv;
