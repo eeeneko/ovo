@@ -46,9 +46,16 @@
     //如果你想遍历元素，请使用内置迭代器，方法如下
     d.iter = d.begin();
     for(;d.iter != d.end(); d.iter++){
-        std::cout << "Key: " << d.iter->first << "  val: " << d.iter->second << endl;
+        std::cout << "Key: " << d.iter->first << "  val: " << d.iter->second << std::endl;
     }
     
+    //另一种遍历方法
+    d.forEach([&](string first, string second){
+        std::cout << "Key: " << first << "  val:" << second << std::endl;
+    });
+    
+    //JSON格式显示全部元素，返回一个字符串
+    std::cout << d.showAll() << std::endl;
     
     return 0;
  }

@@ -55,5 +55,48 @@
  }
  ````
  
+ ### 关系型数据库
+ 
+  - 请查看以下代码
+ ````C++
+ #include <iostream>
+ #include <vector>
+ #include "ovo.h"
+ 
+ int main()
+ {
+    ovo::db db("database\\my_data"); //自定义数据库文件夹
+    
+    ovo::data newData;
+    std::vector<string> v;
+    
+    //配置各列名称
+    v.push_back("name");
+    v.push_back("id");
+    
+    db._createTable("TableName",  v); //用表名和列表名vector创建table
+    //db._createTable("TableName",  v, vv); //你也可以传入第三个vector<string>指定索引，默认全部列为索引
+    
+    newData["id"] = "1515";
+    newData["name"] = "iotcat";
+    
+    db.insertSQL("TableName", newData); //插入新数据
+    
+    ovo::data FilterData;
+    
+    FilterData["iotcat"] = "iotcat";
+    
+    std::cout << "Found " db.getNumSQL("TableName", FilterData) << " Items!!" << std::endl; //获取满足FilterData条件的数据条数
+    
+    vector<ovo::data> resData = db.getSQL("TableName", FilterData); //获取所有满足条件的数据块
+    
+    //显示所有接收到的数据
+    for(auto i : resData){
+        std::cout << i.showAll() << std::endl;
+    }
+    
+    return 0;
+ }
+ ````
  
 
