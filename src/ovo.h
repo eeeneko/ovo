@@ -325,6 +325,13 @@ namespace ovo{
                 this->_data[this->toStr(key)] = this->toStr(val);
             };
 
+            /* attach data */
+            template <typename T>
+            inline void attachData(const T& key, ovo::data data){
+                this->isExist(key);
+                this->_data[this->toStr(key)] = this->dataToStr(data);
+            };
+
             /* overload [] */
             template <typename T>
             string& operator[](const T& i){
@@ -394,6 +401,39 @@ namespace ovo{
                 }
             }
 
+            /* data to string */
+            string dataToStr(ovo::data& d){
+
+                string s = "__OVO_DATA__";
+                d.classify();
+                d.forEach([&](string first, string second){
+                    s += first + "$$||$$" + second + "$$||$$";
+                });
+
+                return s;
+            };
+
+            /* string to data */
+            ovo::data strToData(string s){
+
+                ovo::data d;
+
+                if(s.length() <= 12 || s.substr(0, 12) != "__OVO_DATA__") return d;
+
+                s = s.substr(12);
+
+                std::vector<string> v;
+                S.split(s, v, "$$||$$");
+
+                for(int i = 0; i < v.size() - 1; i += 2){
+
+                    d[v[i]] = v[i + 1];
+                }
+
+                return d;
+
+            };
+
             /* for each */
             void forEach(auto f){
                 map<string, string>::iterator t_iter = this->_data.begin();
@@ -423,6 +463,7 @@ namespace ovo{
 
         private:
             map<string, string> _data;
+            ovo::String S;
             /* string to string */
             inline string toStr(const string& from) const{
                 return from;
