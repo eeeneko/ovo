@@ -332,6 +332,13 @@ namespace ovo{
                 this->_data[this->toStr(key)] = this->dataToStr(data);
             };
 
+           /* attach data */
+            template <typename T>
+            inline void attachData(const T& key, string s){
+                this->isExist(key);
+                this->_data[this->toStr(key)] = s;
+            };
+
             /* overload [] */
             template <typename T>
             string& operator[](const T& i){
@@ -480,6 +487,105 @@ namespace ovo{
             }
 
     };
+
+
+
+    /**
+    * Index Storage
+    *
+    * @author yimian
+    * @category ovo
+    * @package ovo
+    */
+    class index{
+
+        public:
+            index(){};
+            friend class db;
+            index(const index& i){
+                this->_val = i._val;
+                this->_index = i._index;
+            };
+            ~index(){
+                this->_val.erase(this->_val.begin(),this->_val.end());
+                this->_index.erase(this->_index.begin(),this->_index.end());
+            };
+
+            void push_back(const string& val, const string& index){
+
+                this->_val.push_back(val);
+                this->_index.push_back(index);
+            };
+
+            std::vector<string> getIndex(const string& val){
+
+                std::vector<string> v;
+                std::vector<unsigned int> pos = this->_getPosition(this->_val, val);
+
+                for(unsigned int i : pos){
+                    v.push_back(this->_index[i]);
+                }
+                return v;
+            };
+
+           string getVal(const string& index){
+
+                std::vector<unsigned int> pos = this->_getPosition(this->_index, index);
+
+                if(pos.size()) return this->_val[pos[0]];
+                return string();
+            };
+
+            void delByIndex(const string& index){
+
+                std::vector<unsigned int> pos = this->_getPosition(this->_index, index);
+
+                sort(pos.begin(), pos.end(), [&](const unsigned int& a, const unsigned int& b)->bool{
+                    return (a > b);
+                });
+
+                for(unsigned int i : pos){
+                    this->_index.erase(this->_index.begin() + i);
+                    this->_val.erase(this->_val.begin() + i);
+                }
+            };
+
+            void delByVal(const string& val){
+
+                std::vector<unsigned int> pos = this->_getPosition(this->_val, val);
+
+                sort(pos.begin(), pos.end(), [&](const unsigned int& a, const unsigned int& b)->bool{
+                    return (a > b);
+                });
+
+                for(unsigned int i : pos){
+                    this->_index.erase(this->_index.begin() + i);
+                    this->_val.erase(this->_val.begin() + i);
+                }
+            };
+
+            int size(){
+                return this->_index.size();
+            }
+
+        private:
+            std::vector<string> _val, _index;
+
+            std::vector<unsigned int> _getPosition(std::vector<string>& v, const string& s){
+
+                std::vector<unsigned int> o;
+                vector <string>::iterator it = find(v.begin(), v.end(), s);
+                while(it != v.end()){
+
+                    o.push_back(distance(v.begin(), it));
+                    it = find(++it, v.end(), s);
+                }
+                
+                return o;
+            };
+
+    };
+
 
     /**
     * Database operation
