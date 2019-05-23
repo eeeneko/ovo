@@ -57,6 +57,11 @@
     //JSON格式显示全部元素，返回一个字符串
     std::cout << d.showAll() << std::endl;
     
+    std::string s = d.dataToStr(d); //Data转换为string
+    ovo::data d2 = d2.strToData(s); //string转换为Data
+    
+    d.attachData("DataItem", d2); //向d追加一条键名为"DataItem", 内容为d2的item
+    
     return 0;
  }
  ````
