@@ -4,6 +4,7 @@
  - 使用以下代码快速开始
  ````C++
  #include <iostream>
+ #include <vector>
  #include "ovo.h"
  
  int main()
