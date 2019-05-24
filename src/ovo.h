@@ -25,6 +25,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
+#include <functional>
 
 #ifdef _pthread
 
@@ -221,7 +222,7 @@ namespace ovo{
 
             /*** AES ***/
         public:
-            aes_ini(std::string key, std::string iv = ""){
+            void aes_ini(std::string key, std::string iv = ""){
                 key = (this->md5(key)).substr(0, 16);
                 _aes_key = key;
                 if(iv == "") this->_aes_iv = this->_aes_key;
@@ -442,7 +443,7 @@ namespace ovo{
             };
 
             /* for each */
-            void forEach(auto f){
+            void forEach(const std::function<void(string, string)>& f){
                 map<string, string>::iterator t_iter = this->_data.begin();
                 while(t_iter != this->_data.end()){
                     f(t_iter->first, t_iter->second);
@@ -452,6 +453,7 @@ namespace ovo{
 
            /* display all elements */
             string showAll(){
+                this->classify();
                 string s = "{";
                 map<string, string>::iterator t_iter = this->_data.begin();
                 while(t_iter != this->_data.end()){
@@ -468,8 +470,9 @@ namespace ovo{
                 return _data.size();
             }
 
-        private:
             map<string, string> _data;
+        private:
+            
             ovo::String S;
             /* string to string */
             inline string toStr(const string& from) const{
@@ -612,8 +615,14 @@ namespace ovo{
 
             /* push data to database */
             void pushData(const string& key, data& data);
+            inline void pushData(data& data, const string& key){
+                pushData(key, data);
+            };
             /* add data to database */
             void addData(const string& key, data& data);
+            inline void addData(data& data, const string& key){
+                pushData(key, data);
+            };
             /* get data from database */
             data getData(const string& key);
             /* get data from database */
@@ -702,6 +711,9 @@ namespace ovo{
                 std::vector<ovo::data> o;
 
                 indexList = this->_getTableIndex(tableName);
+                if(indexList["_isExist"] == "NO"){
+                    return o;
+                }
                 if(indexList["__TABLE_INDEX__" + index] == "undefined"){
                     return o;
                 }
@@ -722,8 +734,13 @@ namespace ovo{
                 std::vector<std::vector<string>> v;
                 std::vector<ovo::data> o;
 
-                indexList = this->_getTableIndex(tableName);
+                d.classify();
+                if(!d.size()) return this->getSQL(tableName);
 
+                indexList = this->_getTableIndex(tableName);
+                if(indexList["_isExist"] == "NO"){
+                    return o;
+                }
 
                 d.forEach([&](string index, string val){
 
@@ -742,6 +759,9 @@ namespace ovo{
                 std::vector<ovo::data> o;
 
                 indexList = this->getData(this->_getTableList(tableName));
+                if(indexList["_isExist"] == "NO"){
+                    return o;
+                }
 
 
                 for(auto i : indexList){
@@ -757,6 +777,9 @@ namespace ovo{
                 std::vector<string> v;
 
                 indexList = this->_getTableIndex(tableName);
+                if(indexList["_isExist"] == "NO"){
+                    return 0;
+                }
                 if(indexList["__TABLE_INDEX__" + index] == "undefined"){
                     return 0;
                 }
@@ -880,6 +903,9 @@ namespace ovo{
                 ovo::data d, o;
 
                 d = this->getData(generateTableName(tableName));
+
+                if(d["_isExist"] == "NO") return d;
+
                 std::vector<string> v;
 
                 S.split(d["__OVO_INDEX__"], v, "||$$||");
